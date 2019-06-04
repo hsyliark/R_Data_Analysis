@@ -1,0 +1,37 @@
+USE ezen;
+CREATE TABLE if NOT EXISTS address_book (
+NO INT UNSIGNED NOT NULL AUTO_INCREMENT,
+NAME VARCHAR(10) NOT NULL,
+tel VARCHAR(14),
+nickname VARCHAR(20) DEFAULT '별명',
+PRIMARY KEY(NO)
+) AUTO_INCREMENT=10001 DEFAULT CHARSET=UTF8;
+
+SHOW TABLES;
+
+DROP TABLE address_book;
+
+DESC ezen.address_book;
+
+ALTER TABLE address_book ADD gender CHAR(2) NOT NULL;
+ALTER TABLE address_book DROP tel;
+ALTER TABLE address_book add tel VARCHAR(14) NOT NULL;
+ALTER TABLE address_book CHANGE NO aid INT(8);
+ALTER TABLE address_book CHANGE aid aid INT(4) UNSIGNED auto_increment;
+
+
+SELECT countrycode, COUNT(*) FROM city GROUP BY countrycode
+GROUP BY countrycode HAVING COUNT(*) >=50 desc;
+
+
+
+INSERT INTO Eagles(backNo, NAME, POSITION, highschool, hand)
+ VALUES(16, '문동욱', '투수', '동성고', '우투좌타'), (109, '김영우', '투수', '용마고', '우투양타'),
+ (97, '문재현', '투수', '서울고', '좌투좌타'), (36, '장민재', '투수', '광주제일고', '우투우타'),
+ (47, '김종민', '포수', '대전고', '우투우타'), (13, '최재훈', '포수', '덕수고', '우투우타'),
+ (52, '김태균', '내야수', '천안북일고', '우투우타'), (02, '노태형', '내야수', '북일고', '우투좌타'),
+ (09, '이동훈', '외야수', '상원고', '좌투좌타'), (03, '원혁재', '외야수', '장충고', '좌투좌타');  
+SELECT * FROM eagles;
+
+UPDATE eagles SET highschool='광주제일고', hand='우투우타'
+WHERE backNo=36;
