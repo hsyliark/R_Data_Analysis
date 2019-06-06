@@ -1,4 +1,4 @@
-#### Simulation data    
+#### Simulation data     
 
 
 dat.gen <- function(n, p, beta, seed=NULL){
