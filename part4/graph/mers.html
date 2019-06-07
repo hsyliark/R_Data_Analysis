@@ -1,0 +1,132 @@
+
+        <!DOCTYPE html>
+        <meta charset="utf-8">
+        <body> 
+ <style>
+.link {
+stroke: #666;
+opacity: 0.6;
+stroke-width: 1.5px;
+}
+.node circle {
+stroke: #fff;
+opacity: 0.6;
+stroke-width: 1.5px;
+}
+text {
+font: 7px serif;
+opacity: 0.6;
+pointer-events: none;
+}
+</style>
+
+<script src=http://d3js.org/d3.v3.min.js></script>
+
+<script> 
+ var links = [ { "source" : 1, "target" : 1 }, { "source" : 2, "target" : 1 }, { "source" : 3, "target" : 1 }, { "source" : 4, "target" : 1 }, { "source" : 5, "target" : 1 }, { "source" : 6, "target" : 1 }, { "source" : 7, "target" : 1 }, { "source" : 8, "target" : 1 }, { "source" : 9, "target" : 1 }, { "source" : 10, "target" : 1 }, { "source" : 11, "target" : 1 }, { "source" : 12, "target" : 1 }, { "source" : 13, "target" : 1 }, { "source" : 14, "target" : 1 }, { "source" : 15, "target" : 1 }, { "source" : 16, "target" : 1 }, { "source" : 17, "target" : 1 }, { "source" : 18, "target" : 1 }, { "source" : 19, "target" : 1 }, { "source" : 20, "target" : 1 }, { "source" : 21, "target" : 1 }, { "source" : 22, "target" : 16 }, { "source" : 23, "target" : 16 }, { "source" : 24, "target" : 1 }, { "source" : 25, "target" : 1 }, { "source" : 26, "target" : 1 }, { "source" : 27, "target" : 1 }, { "source" : 28, "target" : 1 }, { "source" : 29, "target" : 16 }, { "source" : 30, "target" : 16 }, { "source" : 31, "target" : 1 }, { "source" : 32, "target" : 1 }, { "source" : 33, "target" : 1 }, { "source" : 34, "target" : 14 }, { "source" : 35, "target" : 16 }, { "source" : 36, "target" : 14 }, { "source" : 37, "target" : 16 }, { "source" : 38, "target" : 14 }, { "source" : 39, "target" : 14 }, { "source" : 40, "target" : 14 }, { "source" : 41, "target" : 1 }, { "source" : 42, "target" : 1 }, { "source" : 43, "target" : 1 }, { "source" : 44, "target" : 16 }, { "source" : 45, "target" : 14 }, { "source" : 46, "target" : 14 }, { "source" : 47, "target" : 14 }, { "source" : 48, "target" : 14 }, { "source" : 49, "target" : 14 }, { "source" : 50, "target" : 1 }, { "source" : 51, "target" : 1 }, { "source" : 52, "target" : 1 }, { "source" : 53, "target" : 16 }, { "source" : 54, "target" : 16 }, { "source" : 55, "target" : 14 }, { "source" : 56, "target" : 14 }, { "source" : 57, "target" : 14 }, { "source" : 58, "target" : 14 }, { "source" : 59, "target" : 14 }, { "source" : 60, "target" : 14 }, { "source" : 61, "target" : 14 }, { "source" : 62, "target" : 14 }, { "source" : 63, "target" : 14 }, { "source" : 64, "target" : 14 }, { "source" : 65, "target" : 14 }, { "source" : 66, "target" : 14 }, { "source" : 67, "target" : 14 }, { "source" : 68, "target" : 14 }, { "source" : 69, "target" : 14 }, { "source" : 70, "target" : 14 }, { "source" : 71, "target" : 14 }, { "source" : 72, "target" : 14 }, { "source" : 73, "target" : 14 }, { "source" : 74, "target" : 14 }, { "source" : 75, "target" : 14 }, { "source" : 76, "target" : 14 }, { "source" : 77, "target" : 14 }, { "source" : 78, "target" : 14 }, { "source" : 79, "target" : 14 }, { "source" : 80, "target" : 14 }, { "source" : 81, "target" : 16 }, { "source" : 82, "target" : 16 }, { "source" : 83, "target" : 16 }, { "source" : 84, "target" : 16 }, { "source" : 85, "target" : 16 }, { "source" : 86, "target" : 16 }, { "source" : 87, "target" : 6 }, { "source" : 88, "target" : 14 }, { "source" : 89, "target" : 14 }, { "source" : 90, "target" : 14 }, { "source" : 91, "target" : 6 }, { "source" : 92, "target" : 15 }, { "source" : 93, "target" : 15 }, { "source" : 94, "target" : 16 }, { "source" : 95, "target" : 14 }, { "source" : 96, "target" : 14 }, { "source" : 97, "target" : 14 }, { "source" : 98, "target" : 14 }, { "source" : 99, "target" : 14 }, { "source" : 100, "target" : 14 }, { "source" : 101, "target" : 14 }, { "source" : 102, "target" : 14 }, { "source" : 103, "target" : 14 }, { "source" : 104, "target" : 14 }, { "source" : 105, "target" : 16 }, { "source" : 106, "target" : 16 }, { "source" : 107, "target" : 15 }, { "source" : 108, "target" : 14 }, { "source" : 109, "target" : 14 }, { "source" : 110, "target" : 14 }, { "source" : 111, "target" : 14 }, { "source" : 112, "target" : 14 }, { "source" : 113, "target" : 14 }, { "source" : 114, "target" : 14 }, { "source" : 115, "target" : 14 }, { "source" : 116, "target" : 15 }, { "source" : 117, "target" : 14 }, { "source" : 118, "target" : 0 }, { "source" : 119, "target" : 14 }, { "source" : 120, "target" : 14 }, { "source" : 121, "target" : 14 }, { "source" : 122, "target" : 14 }, { "source" : 123, "target" : 14 }, { "source" : 124, "target" : 14 }, { "source" : 125, "target" : 14 }, { "source" : 126, "target" : 16 }, { "source" : 127, "target" : 16 }, { "source" : 128, "target" : 16 }, { "source" : 129, "target" : 16 }, { "source" : 130, "target" : 14 }, { "source" : 131, "target" : 14 }, { "source" : 132, "target" : 76 }, { "source" : 133, "target" : 14 }, { "source" : 134, "target" : 14 }, { "source" : 135, "target" : 14 }, { "source" : 136, "target" : 14 }, { "source" : 137, "target" : 14 }, { "source" : 138, "target" : 14 }, { "source" : 139, "target" : 14 }, { "source" : 140, "target" : 14 }, { "source" : 141, "target" : 14 }, { "source" : 142, "target" : 16 }, { "source" : 143, "target" : 15 }, { "source" : 144, "target" : 76 }, { "source" : 145, "target" : 14 }, { "source" : 146, "target" : 123 }, { "source" : 147, "target" : 36 }, { "source" : 148, "target" : 16 }, { "source" : 149, "target" : 76 }, { "source" : 150, "target" : 14 }, { "source" : 151, "target" : 14 }, { "source" : 152, "target" : 118 }, { "source" : 153, "target" : 14 } ] ; 
+ var nodes = {}
+
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+link.source = nodes[link.source] ||
+(nodes[link.source] = {name: link.source});
+link.target = nodes[link.target] ||
+(nodes[link.target] = {name: link.target});
+link.value = +link.value;
+});
+
+var width = 2000
+height = 1000;
+
+var force = d3.layout.force()
+.nodes(d3.values(nodes))
+.links(links)
+.size([width, height])
+.linkDistance(50)
+.charge(-200)
+.on("tick", tick)
+.start();
+
+var svg = d3.select("body").append("svg")
+.attr("width", width)
+.attr("height", height);
+
+var link = svg.selectAll(".link")
+.data(force.links())
+.enter().append("line")
+.attr("class", "link");
+
+var node = svg.selectAll(".node")
+.data(force.nodes())
+.enter().append("g")
+.attr("class", "node")
+.on("mouseover", mouseover)
+.on("mouseout", mouseout)
+.on("click", click)
+.on("dblclick", dblclick)
+.call(force.drag);
+
+node.append("circle")
+.attr("r", 8)
+.style("fill", "#3182bd");
+
+node.append("text")
+.attr("x", 12)
+.attr("dy", ".35em")
+.style("fill", "#3182bd")
+.text(function(d) { return d.name; });
+
+function tick() {
+link
+.attr("x1", function(d) { return d.source.x; })
+.attr("y1", function(d) { return d.source.y; })
+.attr("x2", function(d) { return d.target.x; })
+.attr("y2", function(d) { return d.target.y; });
+
+node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+}
+
+function mouseover() {
+d3.select(this).select("circle").transition()
+.duration(750)
+.attr("r", 16);
+}
+
+function mouseout() {
+d3.select(this).select("circle").transition()
+.duration(750)
+.attr("r", 8);
+}
+// action to take on mouse click
+function click() {
+d3.select(this).select("text").transition()
+.duration(750)
+.attr("x", 22)
+.style("stroke-width", ".5px")
+.style("opacity", 1)
+.style("fill", "#E34A33")
+.style("font", "17.5px serif");
+d3.select(this).select("circle").transition()
+.duration(750)
+.style("fill", "#E34A33")
+.attr("r", 16)
+}
+
+// action to take on mouse double click
+function dblclick() {
+d3.select(this).select("circle").transition()
+.duration(750)
+.attr("r", 6)
+.style("fill", "#E34A33");
+d3.select(this).select("text").transition()
+.duration(750)
+.attr("x", 12)
+.style("stroke", "none")
+.style("fill", "#E34A33")
+.style("stroke", "none")
+.style("opacity", 0.6)
+.style("font", "7px serif");
+}
+
+</script>
+ </body>

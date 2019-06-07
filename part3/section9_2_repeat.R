@@ -142,3 +142,19 @@ for (i in 2:9) {
   }
 }
 
+# for loop
+
+x <- 0
+for (i in seq(3,100,3)) {
+  x <- x + i
+}
+print(x)
+
+for (i in seq(1,0,1)) {
+  print(i)
+}
+
+for (i in c(1,3,5,7,9)) {
+  print(i)
+}
+
