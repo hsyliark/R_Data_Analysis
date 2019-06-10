@@ -42,6 +42,7 @@ str(midwest)
 
 ##### Drawing scatter plot
 ```{r}
+options(scipen=100)
 ggplot(midwest,aes(x=poptotal,y=popasian)) + 
   geom_point(color='black',size=3) +
   coord_cartesian(xlim = c(0,500000), ylim = c(0,10000)) +
@@ -69,6 +70,7 @@ mpg %>%
 ```{r}
 select_mpg <- mpg %>%
   group_by(manufacturer) %>%
+  filter(class=="suv") %>%
   filter(manufacturer %in% c('subaru','toyota','nissan','jeep','mercury')) %>%
   summarise(average=mean(cty,na.rm=T)) %>%
   arrange(desc(average))
