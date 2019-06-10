@@ -1,0 +1,216 @@
+---
+title: "6월 10일 ggplot2 과제"
+author: "황 성 윤"
+date: '2019 6 10 '
+output: html_document
+---
+
+# ggplot2 패키지 및 R Markdown 활용
+
+## 다음의 문제를 R Markdown 보고서(HTML 형식)로 제출하시오.
+
+##### ggplot2 패키지 설치 및 열기
+```{r}
+library(ggplot2)
+```
+
+
+### 1. mpg 데이터의 cty(도시 연비)와 hwy(고속도로 연비) 간에 어떤 관계가 있는지 알아보려고 합니다. x축은 cty, y축은 hwy로 된 산점도를 만들어 보세요.
+
+##### mpg 데이터 확인
+```{r}
+mpg
+str(mpg)
+```
+
+##### Drawing scatter plot
+```{r}
+ggplot(mpg,aes(x=cty,y=hwy)) + geom_point(color='green',size=3) +
+  ggtitle("Scatter plot (cty VS hwy)") +
+  theme(plot.title = element_text(color="black",size=16,face="bold.italic",hjust=0.5),
+    axis.title.x = element_text(color="red",size=12,face="bold"),
+    axis.title.y = element_text(color="blue",size=12,face="bold"))
+```
+
+### 2. 미국 지역별 인구통계 정보를 담은 ggplot2 패키지의 midwest 데이터를 이용해서 전체 인구와 아시아인 인구 간에 어떤 관계가 있는지 알아보려고 합니다. x축은 poptotal(전체 인구), y축은 popasian(아시아인 인구)으로 된 산점도를 만들어 보세요. 전체 인구는 50만 명 이하, 아시아인 인구는 1만 명 이하인 지역만 산점도에 표시되게 설정하세요.
+
+##### midwest 데이터 확인
+```{r}
+midwest
+str(midwest)
+```
+
+##### Drawing scatter plot
+```{r}
+ggplot(midwest,aes(x=poptotal,y=popasian)) + 
+  geom_point(color='black',size=3) +
+  coord_cartesian(xlim = c(0,500000), ylim = c(0,10000)) +
+  ggtitle("Scatter plot (poptotal VS popasian)") +
+  theme(plot.title = element_text(color="purple",size=16,face="bold.italic",hjust=0.5),
+    axis.title.x = element_text(color="brown",size=12,face="bold"),
+    axis.title.y = element_text(color="orange",size=12,face="bold"))
+```
+
+### 3. 어떤 회사에서 생산한 "suv" 차종의 도시 연비가 높은지 알아보려고 합니다. "suv" 차종을 대상으로 평균 cty(도시 연비)가 가장 높은 회사 다섯 곳을 막대 그래프로 표현해 보세요. 막대는 연비가 높은 순으로 정렬하세요. 
+
+##### suv 차종 대상 상위 5곳의 평균 cty 확인
+```{r}
+library(dplyr)
+mpg %>%
+  filter(class=="suv") %>%
+  group_by(manufacturer) %>%
+  summarise(average=mean(cty,na.rm=T)) %>%
+  arrange(desc(average)) %>%
+  head(5)
+```
+확인 결과, suv 차종 대상으로 subaru, toyota, nissan, jeep, mercury 의 차량이 평균 도시 연비가 높은 것으로 나타남.  
+
+##### Drawing barplot
+```{r}
+select_mpg <- mpg %>%
+  group_by(manufacturer) %>%
+  filter(manufacturer %in% c('subaru','toyota','nissan','jeep','mercury')) %>%
+  summarise(average=mean(cty,na.rm=T)) %>%
+  arrange(desc(average))
+ggplot(select_mpg,aes(x=reorder(manufacturer,-average),y=average,fill=manufacturer)) +
+  geom_bar(stat="identity") +
+  xlab("manufacturer") + ylab("mean of cty") +
+  ggtitle("Barplot (High cty in suv)") +
+  theme(plot.title = element_text(color="black",size=16,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="black",size=12,face="bold"),
+        axis.title.y = element_text(color="black",size=12,face="bold"))
+```
+
+### 4. 자동차 중에서 어떤 class(자동차 종류)가 가장 많은지 알아보려고 합니다. 자동차 종류별 빈도를 표현한 막대 그래프를 만들어 보세요.
+
+##### 자동차 종류에 따른 빈도수 확인
+```{r}
+number_mpg <- mpg %>% 
+  group_by(class) %>%
+  summarise(number=length(class))  
+```
+
+##### Drawing barplot
+```{r}
+ggplot(number_mpg,aes(x=reorder(class,-number),y=number)) +
+  geom_bar(stat="identity") +
+  xlab("class") + ylab("frequency") +
+  ggtitle("Barplot (Frequency of class)") +
+  theme(plot.title = element_text(color="orange",size=16,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="black",size=12,face="bold"),
+        axis.title.y = element_text(color="brown",size=12,face="bold"))
+```
+
+### 5. economics 데이터를 이용해서 psavert(개인 저축률)가 시간에 따라서 어떻게 변해왔는지 알아보려고 합니다. 시간에 따른 개인 저축률의 변화를 나타낸 시계열 그래프를 만들어 보세요.
+
+##### economics 데이터 확인
+```{r}
+economics
+str(economics)
+```
+
+##### Drawing time series plot
+월별에 따른 개인 저축률의 변화를 보여주는 시계열 그래프
+```{r}
+ggplot(economics,aes(x=date,y=psavert)) +
+  geom_line() +
+  ggtitle("Time series plot of psavert") +
+  theme(plot.title = element_text(color="black",size=16,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="red",size=12,face="bold"),
+        axis.title.y = element_text(color="blue",size=12,face="bold"))
+```
+
+### 6. class(자동차 종류)가 "compact", "subcompact", "suv"인 자동차의 cty(도시 연비)가 어떻게 다른지 비교해보려고 합니다. 세 차종의 cty를 나타낸 상자 그림을 만들어보세요.
+
+##### 해당 차종과 관련있는 데이터 추출
+```{r}
+find_mpg <- mpg %>%
+  filter(class %in% c("compact","subcompact","suv")) %>%
+  group_by(class)
+find_mpg
+```
+
+##### Drawing boxplot
+```{r}
+ggplot(find_mpg,aes(x=class,y=cty,fill=class)) +
+  geom_boxplot() +
+  ggtitle("Boxplot of cty (by class)") +
+  theme(plot.title = element_text(color="black",size=16,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="black",size=12,face="bold"),
+        axis.title.y = element_text(color="black",size=12,face="bold"))
+```
+
+### 7. Diamonds 데이터 셋을 이용하여 다음 문제를 해결하세요. 단, 컬러, 제목, x축, y축 등 그래프를 예쁘게 작성하세요.
+
+##### Diamonds 데이터 확인
+```{r}
+diamonds
+str(diamonds)
+```
+
+#### 1) cut의 도수를 보여주는 그래프를 작성하세요.
+
+##### cut에 따른 도수 확인
+```{r}
+number_diamonds <- diamonds %>% 
+  group_by(cut) %>%
+  summarise(number=length(cut))
+number_diamonds
+```
+
+##### Drawing barplot
+```{r}
+ggplot(number_diamonds,aes(x=reorder(cut,-number),y=number,fill=cut)) +
+  geom_bar(stat="identity") +
+  xlab("cut") + ylab("frequency") +
+  ggtitle("Barplot (Frequency of cut)") +
+  theme(plot.title = element_text(color="orange",size=16,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="black",size=12,face="bold"),
+        axis.title.y = element_text(color="brown",size=12,face="bold"))
+```
+
+#### 2) cut에 따른 가격의 변화를 보여주는 그래프를 작성하세요.
+
+##### cut에 따른 가격의 평균값 확인
+```{r}
+sort_diamonds <- diamonds %>%
+  group_by(cut) %>%
+  summarise(average=mean(price,na.rm=T)) %>%
+  arrange(desc(average)) 
+sort_diamonds
+```
+
+##### Drawing barplot
+```{r}
+ggplot(sort_diamonds,aes(x=reorder(cut,-average),y=average,fill=cut)) + 
+  geom_bar(stat="identity") +
+  xlab("cut") + ylab("mean of price") +
+  ggtitle("Barplot of price (By cut)") +
+  theme(plot.title = element_text(color="black",size=16,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="blue",size=12,face="bold"),
+        axis.title.y = element_text(color="red",size=12,face="bold"))
+```
+
+#### 3) cut과 color에 따른 가격의 변화를 보여주는 그래프를 작성하세요.
+
+##### cut과 color에 따른 가격의 평균값 확인
+```{r}
+reorder_diamonds <- diamonds %>%
+  group_by(cut,color) %>%
+  summarise(average=mean(price,na.rm=T))
+reorder_diamonds
+```
+
+##### Drawing line graph
+```{r}
+ggplot(reorder_diamonds,aes(x=color,y=average,color=cut,group=cut,fill=cut)) +
+  geom_line(aes(linetype=cut)) + geom_point(aes(size=average)) +
+  xlab("color") + ylab("mean of price") +
+  ggtitle("Line graph of price (By cut and color)") +
+  theme(plot.title = element_text(color="black",size=16,face="bold.italic",hjust=0.5),
+        axis.title.x = element_text(color="blue",size=12,face="bold"),
+        axis.title.y = element_text(color="red",size=12,face="bold"))
+```
+
+
+
