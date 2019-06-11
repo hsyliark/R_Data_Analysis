@@ -1,0 +1,124 @@
+---
+title: "6월 11일 NLP 과제"
+author: "황 성 윤"
+date: '2019 6 11 '
+output: html_document
+---
+
+# 서울시 응답소 2015년 데이터에서 중요한 키워드를 찾아 워드 클라우드를 만드시오.
+# 단, 다음의 조건을 충족시켜야 함.
+# 1. 제거해야할 단어를 저장한 gsub 파일을 만들 것
+# 2. stringr 패키지를 사용할 것
+# 3. R Markdown 보고서를 만들어서 제출할 것
+
+## 라이브러리 할당 및 해당 패키지 설치
+```{r}
+setwd("D:/Workplace/R_Data_Analysis/part2/stage1_Wordcloud/6월 11일 NLP 분석 과제")
+library(rJava)
+library(KoNLP)
+library(wordcloud)
+library(RColorBrewer)
+library(stringr)
+useSejongDic()
+```
+
+## 데이터 불러들이기 및 명사 추출
+
+2015년 서울시 응답소 데이터에 대한 NLP 분석을 통해 2015년 한해동안 서울시 내의 주요 화젯거리를 알아본다.
+이를 위해 우선 2015년 1월부터 12월까지의 서울시 응답소 데이터를 처리하여 2015년 한해동안의 서울시민들의 생각이 담긴 명사들을 추출한다.
+```{r}
+seoul01 <- readLines("data/응답소_2015_01.txt")
+seoul02 <- readLines("data/응답소_2015_02.txt")
+seoul03 <- readLines("data/응답소_2015_03.txt")
+seoul04 <- readLines("data/응답소_2015_04.txt")
+seoul05 <- readLines("data/응답소_2015_05.txt")
+seoul06 <- readLines("data/응답소_2015_06.txt")
+seoul07 <- readLines("data/응답소_2015_07.txt")
+seoul08 <- readLines("data/응답소_2015_08.txt")
+seoul09 <- readLines("data/응답소_2015_09.txt")
+seoul10 <- readLines("data/응답소_2015_10.txt")
+seoul11 <- readLines("data/응답소_2015_11.txt")
+seoul12 <- readLines("data/응답소_2015_12.txt")
+
+seoul01 <- sapply(seoul01,extractNoun,USE.NAMES=F)
+seoul01 <- unlist(seoul01)
+seoul02 <- sapply(seoul02,extractNoun,USE.NAMES=F)
+seoul02 <- unlist(seoul02)
+seoul03 <- sapply(seoul03,extractNoun,USE.NAMES=F)
+seoul03 <- unlist(seoul03)
+seoul04 <- sapply(seoul04,extractNoun,USE.NAMES=F)
+seoul04 <- unlist(seoul04)
+seoul05 <- sapply(seoul05,extractNoun,USE.NAMES=F)
+seoul05 <- unlist(seoul05)
+seoul06 <- sapply(seoul06,extractNoun,USE.NAMES=F)
+seoul06 <- unlist(seoul06)
+seoul07 <- sapply(seoul07,extractNoun,USE.NAMES=F)
+seoul07 <- unlist(seoul07)
+seoul08 <- sapply(seoul08,extractNoun,USE.NAMES=F)
+seoul08 <- unlist(seoul08)
+seoul09 <- sapply(seoul09,extractNoun,USE.NAMES=F)
+seoul09 <- unlist(seoul09)
+seoul10 <- sapply(seoul10,extractNoun,USE.NAMES=F)
+seoul10 <- unlist(seoul10)
+seoul11 <- sapply(seoul11,extractNoun,USE.NAMES=F)
+seoul11 <- unlist(seoul11)
+seoul12 <- sapply(seoul12,extractNoun,USE.NAMES=F)
+seoul12 <- unlist(seoul12)
+
+seoul_2015 <- c(seoul01,seoul02,seoul03,seoul04,seoul05,seoul06,
+                seoul07,seoul08,seoul09,seoul10,seoul11,seoul12)
+```
+
+## 데이터 분석
+
+### 데이터 처리
+
+분석에 방해되는 문자열 제거
+```{r}
+length(seoul_2015)
+head(seoul_2015,30)
+seoul_2015 <- str_replace_all(seoul_2015,"[^[:alpha:]]","") # 한글, 영어 이외는 제거
+seoul_2015 <- str_replace_all(seoul_2015,"[A-z]","") # 모든 영문자 제거
+seoul_2015 <- str_replace_all(seoul_2015,"\\s","") # 공백 제거
+seoul_2015 <- str_replace_all(seoul_2015,"\\d","") # 숫자 제거
+```
+
+데이터를 살펴본 결과, 1글자 이하, 4글자 이상의 명사는 제외시켜도 이상없다고 판단됨.
+이에 따라 글자수가 2글자 이상 3글자 이하의 명사들만 남기고 제거하기로 함.
+```{r}
+seoul_2015 <- Filter(function(x) {nchar(x)>=2 & nchar(x)<=3}, seoul_2015)
+```
+
+### 필요없는 문자열 제거 
+```{r}
+length(seoul_2015)
+txt <- readLines("data/seoul_gsub.txt")
+for (i in 1:length(txt)) {
+  seoul_2015 <- gsub((txt[i]),"",seoul_2015)
+}
+write(unlist(seoul_2015),"data/seoul_2015_1.txt")
+seoul_2015 <- read.table("data/seoul_2015_1.txt")
+```
+
+### Wordcloud를 통한 NLP 분석
+
+데이터의 크기가 방대한만큼 빈도수가 너무 적은 명사는 제외하는 것이 타당하다고 판단됨.
+이에 따라 빈도수가 1인 명사는 분석에서 제외시킴.  
+```{r}
+nrow(seoul_2015)
+wordcount <- table(seoul_2015)
+head(sort(wordcount,decreasing=T),30)
+wordcount <- wordcount[wordcount > 1] # 빈도수가 1인 명사 제외
+```
+
+분석결과에 대한 wordcloud plot
+```{r}
+palete <- brewer.pal(12,"Paired")
+par(oma=rep(0,4))
+wordcloud(names(wordcount),freq=wordcount,scale=c(5,1),rot.per=0.25,min.freq=2,
+          random.order=F,random.color=T,colors=palete)
+legend(0.2,0.8,"2015년 서울시 응답소 요청사항 분석",cex=0.8,fill=NA,border=NA,bg="yellow",
+       text.col="blue",text.font=2,box.col="red")
+```
+
+분석결과, 시장, 생각, 시민, 사람, 주민 등의 단어의 빈도가 높게 나타났다. 2015년 한해동안 서울시민들이 의사소통이 제대로 되는 사회를 희망했던 것으로 풀이된다. 또한, 공무원, 아이들, 어린이 등의 단어도 빈도가 있는 것으로 보아 어린이들이 좀 더 안전하게 살아갈 수 있는 사회에 대한 서울시민들의 바람을 엿볼 수 있다.
