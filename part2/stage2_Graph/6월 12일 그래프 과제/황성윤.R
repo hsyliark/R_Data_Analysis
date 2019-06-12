@@ -96,13 +96,14 @@ ggplot(top10,aes(x="",y=pct,fill=noun)) +
 top10 <- top10 %>%
   mutate(freqpos=0.8*freq)
 
-ggplot(top10,aes(x=noun,y=freq,fill=noun)) +
+ggplot(top10,aes(x=reorder(noun,-freq),
+                 y=freq,fill=noun)) +
   geom_bar(stat="identity") +
   geom_text(aes(y=freqpos,label=ylabel),
             color="black") +
   xlab("명사") + ylab("빈도수") +
   ggtitle("hiphop 가사 분석결과") +
   theme(plot.title=element_text(
-    color="brown",size=16,
-    face="bold",hjust=0.5))
+    color="brown",size=20,
+    face="bold.italic",hjust=0.5))
 
