@@ -116,8 +116,9 @@ ggplot(re_kbo_scale,aes(x="",y=성적,fill=종류)) +
 
 # pie chart by player
 ggplot(re_kbo,aes(x="",y=성적,fill=종류)) +
+  facet_wrap(~ 선수명) +
   geom_bar(stat="identity") +
-  facet_wrap(~ 선수명) + coord_polar(theta="y") +
+  coord_polar(theta="y") +
   xlab("") + ylab("") +
   ggtitle("야구 선수별 주요 성적 분석 - 2013년") +
   theme(plot.title=element_text(color="darkblue",size=16,
