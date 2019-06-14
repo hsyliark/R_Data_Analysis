@@ -43,6 +43,8 @@ ggplot(re_pay,aes(x=년도,y=월급,col=고용형태)) +
 ## 마포09번 마을버스
 
 (mapobus <- read.csv("마포09번이용현황.csv",header=T))
+mapobus$정류소명 <- paste(1:length(mapobus$정류소명),'.',mapobus$정류소명,sep='')
+mapobus$정류소명 <- factor(mapobus$정류소명,levels=unique(mapobus$정류소명))
 re_mapo <- melt(mapobus,id=c("정류소명"),variable.name="승하차",value.name="승객수")
 
 # barplot
